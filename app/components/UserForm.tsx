@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { Toaster, toast } from 'sonner';
+import LoadingSpinner from './LoadingSpinner';
 
 type FormData = {
   name: string;
@@ -11,6 +12,8 @@ type FormData = {
   age: number;
   salary: number;
   property: string;
+  education: string;
+  occupation: string;
 };
 
 type EstimationResult = {
@@ -67,7 +70,7 @@ export default function UserForm() {
       >
         <h2 className="text-2xl font-bold mb-8 text-gray-800 dark:text-white flex items-center">
           <span className="bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">
-            Your Information
+            Personal Details
           </span>
           <div className="h-1 w-16 bg-gradient-to-r from-primary to-secondary rounded-full ml-4"></div>
         </h2>
@@ -143,7 +146,7 @@ export default function UserForm() {
             {/* Age Field */}
             <div>
               <label htmlFor="age" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Age
+                Your Age
               </label>
               <input
                 id="age"
@@ -175,6 +178,40 @@ export default function UserForm() {
                   {errors.age.message}
                 </p>
               )}
+            </div>
+
+            {/* Education Field - NEW */}
+            <div>
+              <label htmlFor="education" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Education
+              </label>
+              <select
+                id="education"
+                {...register('education')}
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:text-white transition-colors shadow-sm"
+                defaultValue=""
+              >
+                <option value="" disabled>Select your highest education</option>
+                <option value="high_school">High School</option>
+                <option value="bachelors">Bachelor's Degree</option>
+                <option value="masters">Master's Degree</option>
+                <option value="phd">PhD or Doctorate</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            {/* Occupation Field - NEW */}
+            <div>
+              <label htmlFor="occupation" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Occupation
+              </label>
+              <input
+                id="occupation"
+                type="text"
+                {...register('occupation')}
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:text-white transition-colors shadow-sm"
+                placeholder="E.g. Software Engineer, Doctor, etc."
+              />
             </div>
 
             {/* Salary Field */}
@@ -212,20 +249,20 @@ export default function UserForm() {
                 </p>
               )}
             </div>
-          </div>
 
-          {/* Property Field */}
-          <div>
-            <label htmlFor="property" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Property Value (₹) - Optional
-            </label>
-            <input
-              id="property"
-              type="text"
-              {...register('property')}
-              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:text-white transition-colors shadow-sm"
-              placeholder="Enter property value (if any)"
-            />
+            {/* Property Field */}
+            <div>
+              <label htmlFor="property" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Property Value (₹) - Optional
+              </label>
+              <input
+                id="property"
+                type="text"
+                {...register('property')}
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:text-white transition-colors shadow-sm"
+                placeholder="Enter property value (if any)"
+              />
+            </div>
           </div>
 
           {/* Submit Button */}
@@ -240,27 +277,8 @@ export default function UserForm() {
               <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-primary to-secondary opacity-0 group-hover:opacity-50 transition-opacity"></span>
               {isLoading ? (
                 <div className="flex items-center">
-                  <svg
-                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  Calculating...
+                  <LoadingSpinner size="sm" color="white" showText={false} />
+                  <span className="ml-2">Calculating...</span>
                 </div>
               ) : (
                 <div className="flex items-center">
@@ -291,7 +309,7 @@ export default function UserForm() {
         >
           <h2 className="text-2xl font-bold mb-8 text-gray-800 dark:text-white flex items-center">
             <span className="bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">
-              Your Estimated Dowry Range
+              Dowry Estimation Results
             </span>
             <div className="h-1 w-16 bg-gradient-to-r from-primary to-secondary rounded-full ml-4"></div>
           </h2>
@@ -321,7 +339,7 @@ export default function UserForm() {
             </div>
             
             <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md border border-gray-100 dark:border-gray-800">
-              <h3 className="text-xl font-semibold mb-3 text-gray-700  flex items-center">
+              <h3 className="text-xl font-semibold mb-3 text-gray-700 dark:text-gray-300 flex items-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-6 w-6 mr-2"
